@@ -14,3 +14,4 @@
         validate_certs: no
         state: query
       register: show_bridge
+#
