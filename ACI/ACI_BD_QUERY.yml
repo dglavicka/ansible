@@ -1,0 +1,16 @@
+---
+- name: ACI Query
+  hosts: sandboxapic
+  #username: admin
+  #password: ciscopsdt
+  gather_facts: no
+
+  tasks:
+    - name: Query bridge domain
+      aci_bd:
+        #host: "{{}}"
+        username: admin
+        password : ciscopsdt
+        validate_certs: no
+        state: query
+      register: show_bridge

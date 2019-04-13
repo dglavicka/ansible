@@ -1,0 +1,61 @@
+---
+# My first playbook by FisherPrice
+- name: Full DC Build
+  vars_files:
+    - vars-aci.yml
+  hosts: localhost
+  connection: localhost
+  gather_facts: no
+
+  vars:
+    playbook_version: "0.1b"
+# Main task
+  tasks:
+    - name: Test vars
+      debug:
+        #msg: 'VRF:{{ item.value.bd.vrf }} BD NAME:{{ item.value.bd_name }}'
+      #loop: "{{ lookup('dict', aci.tenant1) }}"
+  #  - name: 'Version control check'
+  #    fail: msg="Playbook version and vars version do not match"
+  #    when: playbook version != version_ctrl
+
+    - name: Create a tenant in ACI
+      aci_tenant:
+        tenant="{{ aci.tenant1.tenant_name }}"
+        description="{{ aci.tenant1.tenant_desc }}"
+        state=present
+        hostname="{{ aci_ip }}"
+        username="{{ apic_user }}"
+        password="{{ apic_pass }}"
+        validate_certs=no
+    - name: Create App Profile
+      aci_ap:
+        tenant="{{ aci.tenant1.tenant_name }}"
+        ap="{{ item.key }}"
+        state=present
+        hostname="{{ aci_ip }}"
+        username="{{ apic_user }}"
+        password="{{ apic_pass }}"
+        validate_certs=no
+      with_dict: "{{ aci.tenant1.AppProf }}"
+    - name: Create VRFs
+      aci_vrf:
+        vrf="{{ item.key }}"
+        tenant="{{ aci.tenant1.tenant_name }}"
+        state=present
+        hostname="{{ aci_ip }}"
+        username="{{ apic_user }}"
+        password="{{ apic_pass }}"
+        validate_certs=no
+      with_dict: "{{ aci.tenant1.vrfs }}"
+    - name: Create Bridge domain
+      aci_bd:
+        bd="{{ item.value.bd_name }}"
+        vrf="{{ item.value.vrf }}"
+        tenant="{{ item.value.tenant }}"
+        state=present
+        hostname="{{ aci_ip }}"
+        username="{{ apic_user }}"
+        password="{{ apic_pass }}"
+        validate_certs=no
+      with_dict: "{{ aci.tenant1.bd }}"
