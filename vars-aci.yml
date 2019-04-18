@@ -1,0 +1,30 @@
+---
+# Variables being included by aci playbooks
+# Credentials to log on to the APIC
+
+# Version Control
+version_ctrl: "0.1a"
+
+apic_user: 'admin'
+apic_pass: 'cisco123'
+aci_ip: '10.0.100.6'
+
+aci:
+  tenant1:
+    tenant_name: "Mission_Partner"
+    tenant_desc: "Example_MP_automated"
+    AppProf:
+      AppProf1: "App_1"
+      AppProf2: "App_2"
+    vrfs:
+      vrf1: "WEB"
+      vrf2: "APP_DB"
+    bd:
+      bd1:
+        bd_name: "BD_VLAN_100"
+        vrf: "WEB"
+        tenant: "Mission_Partner"
+      bd2:
+        bd_name: "BD_VLAN_101"
+        vrf: "APP_DB"
+        tenant: "Mission_Partner"
